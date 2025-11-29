@@ -192,7 +192,8 @@ body {
 
 .catalogo-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 0.1fr));
+	justify-content: center;
     gap: 25px;
     padding: 10px;
 }
@@ -299,3 +300,4 @@ body {
 .botoesPaginacao .seta:hover {
     background: #a9a9a9;
 }
+
