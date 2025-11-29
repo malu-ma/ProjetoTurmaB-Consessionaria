@@ -110,13 +110,117 @@ body {
 	background-color: #f4f4f4;
 }
 /* css da pagina inicial */
-.msgBoasVindas {
-	font-size: 25px;
-	font-weight: bold;
-	color: #333;
-	margin-bottom: 20px;
-	margin: 20px;
+
+.mainInicio {
+	margin-top: 8px;
+	padding: 10px;
 }
+
+.linha-veiculos {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 25px;
+    
+}
+
+.item-card {
+    min-width: 280px;
+    max-width: 280px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+
+.banner-slider {
+    width: 100%;
+    height: 750px;
+    overflow: hidden;
+    position: relative;
+}
+
+
+.banner-slider .slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    animation: slideFade 15s infinite;
+}
+
+.banner-slider .slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* delays */
+.banner-slider .slide:nth-child(1) { animation-delay: 0s; }
+.banner-slider .slide:nth-child(2) { animation-delay: 5s; }
+.banner-slider .slide:nth-child(3) { animation-delay: 10s; }
+
+@keyframes slideFade {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    30% { opacity: 1; }
+    40% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+footer {
+    margin-top: 40px;
+    background: #111;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.servicos-especializados {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;   /* para os dois lados ficarem iguais em altura */
+    background-color: #1f1f1f; 
+    margin-top: 40px;
+    color: white;
+    height: 480px;          /* altura semelhante à da imagem modelo */
+}
+
+/* lado esquerdo */
+.servicos-texto {
+    width: 40%;
+    padding: 60px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.servicos-texto h2 {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.servicos-texto p {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #ccc;
+}
+
+/* lado direito com imagem cobrindo tudo */
+.servicos-imagem {
+    width: 60%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.servicos-imagem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;   /* cobre todo o espaço */
+    object-position: center; /* centraliza a imagem */
+}
+
 /* css da pagina de detalhes do veiculo */
 .galeria {
 	display: flex;
@@ -146,6 +250,8 @@ body {
 .seta:hover {
 	background: #f0f0f0;
 }
+
+
 
 /* estilo dos itens do catalogo (card de cada veículo, botão de paginação e barra de pesquisa)*/
 #barraPesquisa {

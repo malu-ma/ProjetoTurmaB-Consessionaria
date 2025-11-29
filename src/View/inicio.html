@@ -69,18 +69,24 @@
 			</header>
 		</div>
 
+		<section class="banner-slider">
+    		<div class="slide"><img src="/ProjetoTurmaB-Consessionaria/img/slide1.png" /></div>
+    		<div class="slide"><img src="/ProjetoTurmaB-Consessionaria/img/slide2.png" /></div>
+    		<div class="slide"><img src="/ProjetoTurmaB-Consessionaria/img/slide3.png" /></div>
+		</section>
+
+
 		{% if usuario is not null %}
 		<li><p class="msgBoasVindas">Bem-vindo, {{ usuario.nome }}!</p></li>
 		{% endif %}
 		<main class="mainInicio">
 			<!-- veiculos -->
-			<div class="catalogo-container">
+			<h1 class="tituloSessao">Veículos em destaque</h1>
+			<div class="linha-veiculos">
 				{% for v in veiculos %}
 				<div class="item-card">
 					<div class="item-img-wrapper">
-						<img
-							src="/ProjetoTurmaB-Consessionaria/public/assets/img/{{ v.imagem }}"
-							alt="{{ v.modelo }}" />
+						<img src="/ProjetoTurmaB-Consessionaria/public/assets/img/{{ v.imagem }}" alt="{{ v.modelo }}">
 					</div>
 
 					<div class="item-info">
@@ -99,13 +105,20 @@
 			<!-- veiculos -->
 		</main>
 
-		<div class="botoesPaginacao">
-			<a class="seta" href="?page={{ pagina - 1 }}"> &lt; </a>
+	<section class="servicos-especializados">
+    	<div class="servicos-texto">
+        	<h2>Serviços especializados</h2>
+        	<p>
+            	A Ousadia Motors tem tudo o que você precisa para garantir que você dirija 
+            	seu veículo satisfeito, tranquilo e seguro.
+        	</p>
+    	</div>
 
-			<span>{{ pagina }}</span>
+    	<div class="servicos-imagem">
+        	<img src="/ProjetoTurmaB-Consessionaria/img/servicos.png">	
+    	</div>
+	</section>
 
-			<a class="seta" href="?page={{ pagina + 1 }}"> &gt; </a>
-		</div>
 
 		<footer>
 			<p>Ousadia Motors &copy; 2025</p>
