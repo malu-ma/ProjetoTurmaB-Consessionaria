@@ -17,7 +17,7 @@ class Database
 
     //  Configurações de ambiente local (para usar em casa)
      private static string $host = 'localhost';
-     private static string $dbname = 'PRJ2DSB';
+     private static string $dbname = 'concessionaria';
      private static string $usuario = 'root';
      private static string $senha = '';
 
