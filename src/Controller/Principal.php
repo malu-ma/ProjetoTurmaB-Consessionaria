@@ -59,5 +59,18 @@ class Principal
         $veiculos = $this->veiculosRepository->paginarVeiculo($pagina, $limite);
         echo $this->ambiente->render("veiculos/catalogo.html", ['veiculos' => $veiculos, 'pagina' => $pagina]);
     }
+
+    public function sobrenos()
+    {
+        session_start();
+        $usuario = null;
+
+        if (isset($_SESSION["user_id"])) {
+            $userRepository = new UserRepository(Database::getConexao());
+            $usuario = $userRepository->loadUserById($_SESSION["user_id"]);
+        }
+
+        echo $this->ambiente->render("sobrenos/sobrenos.html", ['usuario' => $usuario]);
+    }
 }
 ?>
