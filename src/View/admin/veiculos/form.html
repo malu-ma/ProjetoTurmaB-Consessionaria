@@ -66,12 +66,10 @@
     </header>
 
     {% set isEdit = veiculo is defined %}
-    <form action="{% if isEdit %}/ProjetoTurmaB-Consessionaria/admin/veiculos/{{ veiculo.id }}/update{% else %}/ProjetoTurmaB-Consessionaria/admin/veiculos/store{% endif %}" method="POST" enctype="multipart/form-data">
+    <form action="{% if isEdit %}/ProjetoTurmaB-Consessionaria/admin/veiculos/{{ veiculo.id_veiculos }}/update{% else %}/ProjetoTurmaB-Consessionaria/admin/veiculos/store{% endif %}" method="POST" enctype="multipart/form-data">
 
         {% if isEdit %}
-        <label>Id:
-            <input type="number" name="id" value="{{ veiculo.id }}" readonly>
-        </label>
+            <input type="hidden" name="id" value="{{ veiculo.id_veiculos }}" readonly>
         {% endif %}
 
         <label>Marca:
@@ -96,6 +94,10 @@
 
         <label>Cor:
             <input type="text" name="cor" value="{{ veiculo.cor|default('') }}">
+        </label>
+
+        <label>Quilometragem:
+            <input type="text" name="quilometragem" value="{{ veiculo.quilometragem|default('') }}">
         </label>
 
         <label>Imagens:

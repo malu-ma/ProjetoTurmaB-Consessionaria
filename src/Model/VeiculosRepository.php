@@ -22,7 +22,7 @@ class VeiculosRepository
         $listaVeiculos = [];
         while ($item = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $veiculo = new Veiculos();
-            $veiculo->id = $item['id'];
+            $veiculo->id = $item['id_veiculos'];
             $veiculo->imagem = $item['imagem'];
             $veiculo->marca = $item['marca'];
             $veiculo->modelo = $item['modelo'];
@@ -62,7 +62,7 @@ class VeiculosRepository
 
     public function veiculosDetalhes(int $id): ?Veiculos
     {
-        $stmt = $this->conexao->prepare("SELECT * FROM VEICULOS WHERE id = :id");
+        $stmt = $this->conexao->prepare("SELECT * FROM VEICULOS WHERE id_veiculos = :id");
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
@@ -73,7 +73,7 @@ class VeiculosRepository
         }
 
         $veiculo = new Veiculos();
-        $veiculo->id = $dados["id"];
+        $veiculo->id = $dados["id_veiculos"];
         $veiculo->imagem = $dados["imagem"];
         $veiculo->marca = $dados["marca"];
         $veiculo->modelo = $dados["modelo"];
@@ -88,7 +88,7 @@ class VeiculosRepository
 
     public function galeriaImagens(int $id): array
     {
-        $stmt = $this->conexao->prepare("SELECT arquivo FROM veiculos_imagens WHERE id = :id");
+        $stmt = $this->conexao->prepare("SELECT arquivo FROM VEICULOS_IMAGENS WHERE veiculoimg_id = :id");
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
@@ -107,7 +107,7 @@ class VeiculosRepository
         $listaVeiculos = [];
         while ($item = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $veiculo = new Veiculos();
-            $veiculo->id = $item['id'];
+            $veiculo->id = $item['id_veiculos'];
             $veiculo->imagem = $item['imagem'];
             $veiculo->marca = $item['marca'];
             $veiculo->modelo = $item['modelo'];
