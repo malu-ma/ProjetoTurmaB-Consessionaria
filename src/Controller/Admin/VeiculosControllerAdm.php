@@ -1,7 +1,7 @@
 <?php
 namespace Concessionaria\Projetob\Controller;
 
-class VeiculoController
+class VeiculosControllerAdm
 {
     private \Twig\Environment $ambiente;
     private \Twig\Loader\FilesystemLoader $carregador;

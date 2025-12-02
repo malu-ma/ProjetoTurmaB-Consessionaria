@@ -65,22 +65,37 @@
         <h1>Adicionar / Editar</h1>
     </header>
 
-    <form action="/ProjetoTurmaB-Consessionaria/editar" method="POST" enctype="multipart/form-data">
+    {% set isEdit = veiculo is defined %}
+    <form action="{% if isEdit %}/ProjetoTurmaB-Consessionaria/admin/veiculos/{{ veiculo.id }}/update{% else %}/ProjetoTurmaB-Consessionaria/admin/veiculos/store{% endif %}" method="POST" enctype="multipart/form-data">
 
+        {% if isEdit %}
         <label>Id:
-            <input type="number" name="id">
+            <input type="number" name="id" value="{{ veiculo.id }}" readonly>
         </label>
+        {% endif %}
 
         <label>Marca:
-            <input type="text" name="marca">
+            <input type="text" name="marca" value="{{ veiculo.marca|default('') }}">
         </label>
 
         <label>Modelo:
-            <input type="text" name="modelo">
+            <input type="text" name="modelo" value="{{ veiculo.modelo|default('') }}">
         </label>
 
         <label>Preço:
-            <input type="number" name="preco">
+            <input type="number" name="preco" value="{{ veiculo.preco|default('') }}" step="0.01">
+        </label>
+
+        <label>Descrição:
+            <input type="text" name="descricao" value="{{ veiculo.descricao|default('') }}">
+        </label>
+
+        <label>Ano:
+            <input type="number" name="ano" value="{{ veiculo.ano|default('') }}">
+        </label>
+
+        <label>Cor:
+            <input type="text" name="cor" value="{{ veiculo.cor|default('') }}">
         </label>
 
         <label>Imagens:
