@@ -32,6 +32,15 @@ $roteador->get("/", "Principal:catalogo");
 $roteador->get("/{id}", "VeiculosController:detalhes");
 $roteador->get("/pesquisar", "VeiculosController:pesquisar");
 
+// rotas adm para gerenciamento de veículos
+$roteador->group("/admin/veiculos");
+$roteador->get("/", "Admin\\VeiculoController:gerenciamento_de_veiculos");
+$roteador->get("/create", "Admin\\VeiculoController:showCreateForm");
+$roteador->post("/store", "Admin\\VeiculoController:salvarVeiculo");
+$roteador->get("/{id}/edit", "Admin\\VeiculoController:showEditForm");
+$roteador->post("/{id}/update", "Admin\\VeiculoController:atualizarVeiculo");
+$roteador->post("/{id}/delete", "Admin\\VeiculoController:removerVeiculo");
+
 $roteador->dispatch();
 
 /*
