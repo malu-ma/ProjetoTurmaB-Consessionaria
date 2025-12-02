@@ -1,110 +1,91 @@
 <?php
 namespace Concessionaria\Projetob\Controller\Admin;
 
- use PDO;  
-
-
+use PDO;
+use Concessionaria\Projetob\Model\Database;
 
 class VeiculoController
-
 {
+
+    private \PDO $conexao;
     private \Twig\Environment $ambiente;
     private \Twig\Loader\FilesystemLoader $carregador;
-   
+
     public function __construct()
     {
-          
-          
-          
-          
-          
-          
-  $this->carregador = new \Twig\Loader\FilesystemLoader(__DIR__ . "/../../View");
+        $this->carregador = new \Twig\Loader\FilesystemLoader(__DIR__ . "/../../View");
         $this->ambiente = new \Twig\Environment($this->carregador);
+        $this->conexao = Database::getConexao();
     }
-   
+
     public function gerenciamento_de_veiculos()
     {
-        $conexao = new PDO(
-            "mysql:host=localhost;dbname=PRJ2DSB;charset=utf8", //ajustar o nome do bd caso precise(talvez de erro)
-            "root",
-            ""
-        );
-        $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $stmt = $conexao->query("SELECT id, marca, modelo, preco, ano FROM veiculos ORDER BY id DESC");
+        $stmt = $this->conexao->query("SELECT id, marca, modelo, preco, ano FROM veiculos ORDER BY id DESC");
         $veiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         echo $this->ambiente->render("Admin/veiculos\gerenciamento_de_veiculos.html", ['veiculos' => $veiculos]);
     }
-   public function showCreateForm()
+    public function showCreateForm()
     {
-       echo $this->ambiente->render("Admin/veiculos/form.html");
-
+        echo $this->ambiente->render("Admin/veiculos/form.html");
     }
 
- public function salvarVeiculo(array $data)
-{
-    $marca     = $data["marca"] ?? null;
-    $modelo    = $data["modelo"] ?? null;
-    $preco     = $data["preco"] ?? null;
+    public function salvarVeiculo(array $data)
+    {
+        $marca = $data["marca"] ?? null;
+        $modelo = $data["modelo"] ?? null;
+        $preco = $data["preco"] ?? null;
 
-    // novos campos
-    $descricao = $data["descricao"] ?? null;
-    $ano       = $data["ano"] ?? null;
-    $cor       = $data["cor"] ?? null;
+        // novos campos
+        $descricao = $data["descricao"] ?? null;
+        $ano = $data["ano"] ?? null;
+        $cor = $data["cor"] ?? null;
 
-    if (!$marca || !$modelo || !$preco) {
-        echo "Campos obrigatórios não enviados!";
-        return;
-    }
+        if (!$marca || !$modelo || !$preco) {
+            echo "Campos obrigatórios não enviados!";
+            return;
+        }
 
-    // upload da imagem
-    $imagem = null;
+        // upload da imagem
+        $imagem = null;
 
-    if (!empty($_FILES["imagem"]["name"])) {
+        if (!empty($_FILES["imagem"]["name"])) {
 
-$pasta = $_SERVER["DOCUMENT_ROOT"] . "/ProjetoTurmaB-Consessionaria/public/assets/img/";
+            $pasta = $_SERVER["DOCUMENT_ROOT"] . "/ProjetoTurmaB-Consessionaria/public/assets/img/";
 
-if (!is_dir($pasta)) {
-    mkdir($pasta, 0777, true);
-}
+            if (!is_dir($pasta)) {
+                mkdir($pasta, 0777, true);
+            }
 
-$nomeArquivo = uniqid() . "_" . basename($_FILES["imagem"]["name"]);
-$caminhoFinal = $pasta . $nomeArquivo;
+            $nomeArquivo = uniqid() . "_" . basename($_FILES["imagem"]["name"]);
+            $caminhoFinal = $pasta . $nomeArquivo;
 
-if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $caminhoFinal)) {
-    $imagem = $nomeArquivo; // só o nome vai pro banco
-}
-    }
-    // conexão
-    $conexao = new PDO(
-        "mysql:host=localhost;dbname=PRJ2DSB;charset=utf8",
-        "root",
-        ""
-    );
-    $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // INSERT atualizado
-    $sql = "INSERT INTO veiculos (marca, modelo, preco, imagem, descricao, ano, cor)
+            if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $caminhoFinal)) {
+                $imagem = $nomeArquivo; // só o nome vai pro banco
+            }
+        }
+        // conexão
+        
+        // INSERT atualizado
+        $sql = "INSERT INTO veiculos (marca, modelo, preco, imagem, descricao, ano, cor)
             VALUES (:marca, :modelo, :preco, :imagem, :descricao, :ano, :cor)";
 
-    $stmt = $conexao->prepare($sql);
-    $stmt->bindValue(":marca", $marca);
-    $stmt->bindValue(":modelo", $modelo);
-    $stmt->bindValue(":preco", $preco);
-    $stmt->bindValue(":imagem", $imagem);
+        $stmt = $this->conexao->prepare($sql);
+        $stmt->bindValue(":marca", $marca);
+        $stmt->bindValue(":modelo", $modelo);
+        $stmt->bindValue(":preco", $preco);
+        $stmt->bindValue(":imagem", $imagem);
 
-    // novos binds
-    $stmt->bindValue(":descricao", $descricao);
-    $stmt->bindValue(":ano", $ano);
-    $stmt->bindValue(":cor", $cor);
+        // novos binds
+        $stmt->bindValue(":descricao", $descricao);
+        $stmt->bindValue(":ano", $ano);
+        $stmt->bindValue(":cor", $cor);
 
-    $stmt->execute();
+        $stmt->execute();
 
-    header("Location: /ProjetoTurmaB-Consessionaria/veiculos");
-    exit;
-}
+        header("Location: /ProjetoTurmaB-Consessionaria/veiculos");
+        exit;
+    }
 
     public function formEditar(array $data)
     {
@@ -114,14 +95,7 @@ if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $caminhoFinal)) {
             return;
         }
 
-        $conexao = new PDO(
-            "mysql:host=localhost;dbname=PRJ2DSB;charset=utf8",
-            "root",
-            ""
-        );
-        $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $stmt = $conexao->prepare("SELECT * FROM veiculos WHERE id = :id");
+        $stmt = $this->conexao->prepare("SELECT * FROM veiculos WHERE id = :id");
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $veiculo = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -142,9 +116,9 @@ if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $caminhoFinal)) {
             return;
         }
 
-        $marca  = $data['marca'] ?? null;
+        $marca = $data['marca'] ?? null;
         $modelo = $data['modelo'] ?? null;
-        $preco  = $data['preco'] ?? null;
+        $preco = $data['preco'] ?? null;
         $descricao = $data['descricao'] ?? null;
         $ano = $data['ano'] ?? null;
         $cor = $data['cor'] ?? null;
@@ -162,13 +136,7 @@ if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $caminhoFinal)) {
                 $imagem = $nomeArquivo;
             }
         }
-
-        $conexao = new PDO(
-            "mysql:host=localhost;dbname=PRJ2DSB;charset=utf8",
-            "root",
-            ""
-        );
-        $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        
 
         $sql = "UPDATE veiculos SET marca = :marca, modelo = :modelo, preco = :preco, descricao = :descricao, ano = :ano, cor = :cor";
         if ($imagem) {
@@ -176,7 +144,7 @@ if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $caminhoFinal)) {
         }
         $sql .= " WHERE id = :id";
 
-        $stmt = $conexao->prepare($sql);
+        $stmt = $this->conexao->prepare($sql);
         $stmt->bindValue(':marca', $marca);
         $stmt->bindValue(':modelo', $modelo);
         $stmt->bindValue(':preco', $preco);
@@ -201,21 +169,12 @@ if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $caminhoFinal)) {
             echo "Id inválido";
             return;
         }
-
-        $conexao = new PDO(
-            "mysql:host=localhost;dbname=PRJ2DSB;charset=utf8",
-            "root",
-            ""
-        );
-        $conexao->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $stmt = $conexao->prepare("DELETE FROM veiculos WHERE id = :id");
+    
+        $stmt = $this->conexao->prepare("DELETE FROM veiculos WHERE id = :id");
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
 
         header("Location: /ProjetoTurmaB-Consessionaria/admin/veiculos");
         exit;
     }
-
-
 }
