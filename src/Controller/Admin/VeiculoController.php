@@ -19,8 +19,8 @@ class VeiculoController
     }
 
     public function gerenciamento_de_veiculos()
-    {
-        $stmt = $this->conexao->query("SELECT id, marca, modelo, preco, ano FROM veiculos ORDER BY id DESC");
+    {   
+        $stmt = $this->conexao->query("SELECT id_veiculos, marca, modelo, preco, ano FROM VEICULOS ORDER BY id_veiculos DESC");
         $veiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         echo $this->ambiente->render("Admin/veiculos\gerenciamento_de_veiculos.html", ['veiculos' => $veiculos]);
@@ -35,8 +35,7 @@ class VeiculoController
         $marca = $data["marca"] ?? null;
         $modelo = $data["modelo"] ?? null;
         $preco = $data["preco"] ?? null;
-
-        // novos campos
+        $quilometragem = $data["quilometragem"] ?? null;
         $descricao = $data["descricao"] ?? null;
         $ano = $data["ano"] ?? null;
         $cor = $data["cor"] ?? null;
@@ -59,24 +58,54 @@ class VeiculoController
 
             $nomeArquivo = uniqid() . "_" . basename($_FILES["imagem"]["name"]);
             $caminhoFinal = $pasta . $nomeArquivo;
+            // Verificar campos obrigatórios
+            if (!$marca || !$modelo || !$preco || !$quilometragem) {
+                echo "Campos obrigatórios não enviados!";
+                return;
+            }
 
+            // upload da imagem
+            $imagem = null;
+
+            if (!empty($_FILES["imagem"]["name"])) {
+                $pasta = $_SERVER["DOCUMENT_ROOT"] . "/ProjetoTurmaB-Consessionaria/public/assets/img/";
+
+                if (!is_dir($pasta)) {
+                    mkdir($pasta, 0777, true);
+                }
+
+                $nomeArquivo = uniqid() . "_" . basename($_FILES["imagem"]["name"]);
+                $caminhoFinal = $pasta . $nomeArquivo;
+
+                if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $caminhoFinal)) {
+                    $imagem = $nomeArquivo;
+                }
+            }
+
+            $sql = "INSERT INTO VEICULOS(marca, modelo, preco, imagem, quilometragem, descricao, ano, cor)
+                VALUES (:marca, :modelo, :preco, :imagem, :quilometragem, :descricao, :ano, :cor)";
+
+            $stmt = $this->conexao->prepare($sql);
+            $stmt->bindValue(":marca", $marca);
+            $stmt->bindValue(":modelo", $modelo);
+            $stmt->bindValue(":preco", $preco);
+            $stmt->bindValue(":imagem", $imagem);
+            $stmt->bindValue(":quilometragem", $quilometragem);
+            // continue com os outros bindValue normalmente
             if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $caminhoFinal)) {
-                $imagem = $nomeArquivo; // só o nome vai pro banco
+                $imagem = $nomeArquivo;
             }
         }
-        // conexão
         
-        // INSERT atualizado
-        $sql = "INSERT INTO veiculos (marca, modelo, preco, imagem, descricao, ano, cor)
-            VALUES (:marca, :modelo, :preco, :imagem, :descricao, :ano, :cor)";
+        $sql = "INSERT INTO VEICULOS(marca, modelo, preco, imagem, quilometragem, descricao, ano, cor)
+            VALUES (:marca, :modelo, :preco, :imagem, :quilometragem, :descricao, :ano, :cor)";
 
         $stmt = $this->conexao->prepare($sql);
         $stmt->bindValue(":marca", $marca);
         $stmt->bindValue(":modelo", $modelo);
         $stmt->bindValue(":preco", $preco);
         $stmt->bindValue(":imagem", $imagem);
-
-        // novos binds
+        $stmt->bindValue(":quilometragem", $quilometragem);
         $stmt->bindValue(":descricao", $descricao);
         $stmt->bindValue(":ano", $ano);
         $stmt->bindValue(":cor", $cor);
@@ -89,13 +118,13 @@ class VeiculoController
 
     public function formEditar(array $data)
     {
-        $id = (int) ($data['id'] ?? 0); //consulta o id, se existe ou nao
+        $id = (int) ($data['id_veiculos'] ?? 0); //consulta o id, se existe ou nao
         if ($id <= 0) {
             echo "Id inválido";
             return;
         }
 
-        $stmt = $this->conexao->prepare("SELECT * FROM veiculos WHERE id = :id");
+        $stmt = $this->conexao->prepare("SELECT * FROM VEICULOS WHERE id = :id");
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $veiculo = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -142,7 +171,7 @@ class VeiculoController
         if ($imagem) {
             $sql .= ", imagem = :imagem";
         }
-        $sql .= " WHERE id = :id";
+        $sql .= " WHERE id_veiculos = :id";
 
         $stmt = $this->conexao->prepare($sql);
         $stmt->bindValue(':marca', $marca);
