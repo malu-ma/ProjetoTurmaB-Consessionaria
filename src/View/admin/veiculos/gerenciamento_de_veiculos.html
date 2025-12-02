@@ -32,14 +32,14 @@
         <tbody>
             {% for v in veiculos %}
             <tr>
-                <td>{{ v.id }}</td>
+                <td>{{ v.id_veiculos }}</td>
                 <td>{{ v.marca }}</td>
-                <td><a href="/ProjetoTurmaB-Consessionaria/veiculos/{{ v.id }}">{{ v.modelo }}</a></td>
+                <td><a href="/ProjetoTurmaB-Consessionaria/veiculos/{{ v.id_veiculos }}">{{ v.modelo }}</a></td>
                 <td>R$ {{ v.preco }}</td>
-                <td>{{ v.ano }}</td>
+                <td>{{ v.ano }}</td>    
                 <td>
-                    <a class="action-btn" href="/ProjetoTurmaB-Consessionaria/admin/veiculos/{{ v.id }}/edit">Editar</a>
-                    <form  action="/ProjetoTurmaB-Consessionaria/admin/veiculos/{{ v.id }}/delete" method="POST" onsubmit="return confirm('Deseja realmente excluir este veículo?');">
+                    <a class="action-btn" href="/ProjetoTurmaB-Consessionaria/admin/veiculos/{{ v.id_veiculos }}/edit">Editar</a>
+                    <form  action="/ProjetoTurmaB-Consessionaria/admin/veiculos/{{ v.id_veiculos }}/delete" method="POST" onsubmit="return confirm('Deseja realmente excluir este veículo?');">
                         <input type="hidden" name="id" value="{{ v.id }}">
                         <button class="action-btn delete-btn" type="submit">Remover</button>
                     </form>

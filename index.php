@@ -37,9 +37,9 @@ $roteador->group("/admin/veiculos");
 $roteador->get("/", "Admin\\VeiculoController:gerenciamento_de_veiculos");
 $roteador->get("/create", "Admin\\VeiculoController:showCreateForm");
 $roteador->post("/store", "Admin\\VeiculoController:salvarVeiculo");
-$roteador->get("/{id}/edit", "Admin\\VeiculoController:showEditForm");
-$roteador->post("/{id}/update", "Admin\\VeiculoController:atualizarVeiculo");
-$roteador->post("/{id}/delete", "Admin\\VeiculoController:removerVeiculo");
+$roteador->get("/{id_veiculos}/edit", "Admin\\VeiculoController:formEditar");
+$roteador->post("/{id_veiculos}/update", "Admin\\VeiculoController:atualizarVeiculo");
+$roteador->post("/{id_veiculos}/delete", "Admin\\VeiculoController:removerVeiculo");
 
 $roteador->dispatch();
 

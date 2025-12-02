@@ -124,7 +124,7 @@ class VeiculoController
             return;
         }
 
-        $stmt = $this->conexao->prepare("SELECT * FROM VEICULOS WHERE id = :id");
+        $stmt = $this->conexao->prepare("SELECT * FROM VEICULOS WHERE id_veiculos = :id");
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         $veiculo = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -139,7 +139,7 @@ class VeiculoController
 
     public function atualizarVeiculo(array $data)
     {
-        $id = (int) ($data['id'] ?? 0);
+        $id = (int) ($data['id_veiculos'] ?? 0);
         if ($id <= 0) {
             echo "Id inválido";
             return;
@@ -149,6 +149,7 @@ class VeiculoController
         $modelo = $data['modelo'] ?? null;
         $preco = $data['preco'] ?? null;
         $descricao = $data['descricao'] ?? null;
+        $quilometragem = $data['quilometragem'] ?? null;
         $ano = $data['ano'] ?? null;
         $cor = $data['cor'] ?? null;
 
@@ -167,7 +168,7 @@ class VeiculoController
         }
         
 
-        $sql = "UPDATE veiculos SET marca = :marca, modelo = :modelo, preco = :preco, descricao = :descricao, ano = :ano, cor = :cor";
+        $sql = "UPDATE VEICULOS SET marca = :marca, modelo = :modelo, preco = :preco, descricao = :descricao, quilometragem = :quilometragem, ano = :ano, cor = :cor";
         if ($imagem) {
             $sql .= ", imagem = :imagem";
         }
@@ -178,6 +179,7 @@ class VeiculoController
         $stmt->bindValue(':modelo', $modelo);
         $stmt->bindValue(':preco', $preco);
         $stmt->bindValue(':descricao', $descricao);
+        $stmt->bindValue(":quilometragem", $quilometragem);
         $stmt->bindValue(':ano', $ano);
         $stmt->bindValue(':cor', $cor);
         if ($imagem) {
