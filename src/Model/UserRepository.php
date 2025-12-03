@@ -16,7 +16,7 @@ class UserRepository
 
     public function loadUserById(int $id): ?Usuario
     {
-        $stmt = $this->conexao->prepare("SELECT id, nome, email, senha, role FROM usuarios WHERE id = :id");
+        $stmt = $this->conexao->prepare("SELECT id, nome, email, senha, role FROM USUARIOS WHERE id = :id");
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
 
@@ -32,7 +32,7 @@ class UserRepository
 
     public function existeEmail(string $email): bool
     {
-        $stmt = $this->conexao->prepare("SELECT id FROM usuarios WHERE email = :email");
+        $stmt = $this->conexao->prepare("SELECT id FROM USUARIOS WHERE email = :email");
         $stmt->bindValue(":email", $email);
         $stmt->execute();
 
@@ -43,7 +43,7 @@ class UserRepository
     {
         $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
         $stmt = $this->conexao->prepare(
-            "INSERT INTO usuarios (nome, email, senha) VALUES (:nome, :email, :senha)"
+            "INSERT INTO USUARIOS (nome, email, senha) VALUES (:nome, :email, :senha)"
         );
         $stmt->bindValue(":nome", $nome);
         $stmt->bindValue(":email", $email);
