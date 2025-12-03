@@ -39,6 +39,8 @@ class VeiculosControllerADM
         $descricao = $data["descricao"] ?? null;
         $ano = $data["ano"] ?? null;
         $cor = $data["cor"] ?? null;
+        $status = $data["status"] ?? null;
+        $criado_em = $data["criado_em"] ?? null;
 
         if (!$marca || !$modelo || !$preco) {
             echo "Campos obrigatórios não enviados!";
@@ -82,23 +84,15 @@ class VeiculosControllerADM
                 }
             }
 
-            $sql = "INSERT INTO VEICULOS(marca, modelo, preco, imagem, quilometragem, descricao, ano, cor)
-                VALUES (:marca, :modelo, :preco, :imagem, :quilometragem, :descricao, :ano, :cor)";
 
-            $stmt = $this->conexao->prepare($sql);
-            $stmt->bindValue(":marca", $marca);
-            $stmt->bindValue(":modelo", $modelo);
-            $stmt->bindValue(":preco", $preco);
-            $stmt->bindValue(":imagem", $imagem);
-            $stmt->bindValue(":quilometragem", $quilometragem);
             // continue com os outros bindValue normalmente
             if (move_uploaded_file($_FILES["imagem"]["tmp_name"], $caminhoFinal)) {
                 $imagem = $nomeArquivo;
             }
         }
         
-        $sql = "INSERT INTO VEICULOS(marca, modelo, preco, imagem, quilometragem, descricao, ano, cor)
-            VALUES (:marca, :modelo, :preco, :imagem, :quilometragem, :descricao, :ano, :cor)";
+        $sql = "INSERT INTO VEICULOS(marca, modelo, preco, imagem, quilometragem, descricao, ano, cor, status, criado_em)
+            VALUES (:marca, :modelo, :preco, :imagem, :quilometragem, :descricao, :ano, :cor, :status, :criado_em)";
 
         $stmt = $this->conexao->prepare($sql);
         $stmt->bindValue(":marca", $marca);
@@ -109,7 +103,8 @@ class VeiculosControllerADM
         $stmt->bindValue(":descricao", $descricao);
         $stmt->bindValue(":ano", $ano);
         $stmt->bindValue(":cor", $cor);
-
+        $stmt->bindValue(":status", $status);
+        $stmt->bindValue(":criado_em", $criado_em);
         $stmt->execute();
 
         header("Location: /ProjetoTurmaB-Consessionaria/veiculos");
@@ -152,6 +147,8 @@ class VeiculosControllerADM
         $quilometragem = $data['quilometragem'] ?? null;
         $ano = $data['ano'] ?? null;
         $cor = $data['cor'] ?? null;
+        $status = $data["status"] ?? null;
+        $criado_em = $data["criado_em"] ?? null;
 
         $pasta = $_SERVER["DOCUMENT_ROOT"] . "/ProjetoTurmaB-Consessionaria/public/assets/img/"; //vai pra pasta de imgs
         if (!is_dir($pasta)) {
@@ -168,7 +165,7 @@ class VeiculosControllerADM
         }
         
 
-        $sql = "UPDATE VEICULOS SET marca = :marca, modelo = :modelo, preco = :preco, descricao = :descricao, quilometragem = :quilometragem, ano = :ano, cor = :cor";
+        $sql = "UPDATE VEICULOS SET marca = :marca, modelo = :modelo, preco = :preco, descricao = :descricao, quilometragem = :quilometragem, ano = :ano, cor = :cor, status = :status, criado_em = :criado_em";
         if ($imagem) {
             $sql .= ", imagem = :imagem";
         }
@@ -182,6 +179,8 @@ class VeiculosControllerADM
         $stmt->bindValue(":quilometragem", $quilometragem);
         $stmt->bindValue(':ano', $ano);
         $stmt->bindValue(':cor', $cor);
+        $stmt->bindValue(":status", $status);
+        $stmt->bindValue(":criado_em", $criado_em);
         if ($imagem) {
             $stmt->bindValue(':imagem', $imagem);
         }
